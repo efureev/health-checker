@@ -58,3 +58,49 @@ func main() {
 
 }
 ```
+
+With [`Commander`](https://github.com/efureev/go-commander):
+
+```go
+package main
+
+import (
+	commander "github.com/efureev/go-commander"
+	checker "github.com/efureev/health-checker"
+	"github.com/efureev/health-checker/checkers"
+)
+
+func main() {
+	cnf := struct{}{}
+	cmdr := commander.NewCommander().
+		Add(
+			cmdChecking(cnf),
+			// ... 
+		)
+
+	cmdr.Run()
+
+	if cmdr.HasError() {
+		utils.Error(cmdr.commander.Error(), "\nErrors:\n")
+	}
+}
+
+func cmdChecking(cnf any) *commander.Command {
+	return commander.NewCommand(`checking`).
+		OnRun(func(cmd *commander.Command) error {
+			ch := checker.NewChecker().
+				SetLogger(logger.NewConsoleLogger()).
+				AddCmd(
+					checkingPostgresDb(cnf.Checker.Database),
+					checkingElasticsearch(cnf.Checker.Elasticsearch),
+					checkingRedis(cnf.Checker.Redis),
+					checkingRabbitMQ(cnf.Checker.Rabbit),
+					checkingCaptcha(cnf.Checker.Captcha),
+					checkingTargetRepos(cnf.Targets),
+					checkingHDD(cnf.Folder),
+					checkingNode(),
+				)
+			return ch.RunParallel()
+		})
+}
+```
