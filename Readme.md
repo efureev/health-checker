@@ -58,7 +58,7 @@ func main() {
 }
 ```
 
-![./.media/example.png]("Example")
+![](./.media/example.png)
 
 With [`Commander`](https://github.com/efureev/go-commander):
 
