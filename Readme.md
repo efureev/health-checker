@@ -55,9 +55,10 @@ func main() {
 
 	// synchro
 	err := ch.Run()
-
 }
 ```
+
+![./.media/example.png]("Example")
 
 With [`Commander`](https://github.com/efureev/go-commander):
 
