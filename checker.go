@@ -41,14 +41,14 @@ func (c *Checker) RunParallel() error {
 
 			l.Info(`[%s] checking...`, cmd.Name())
 			cmd.SetLogger(l).Run()
-
+			c.addError(multierror.Prefix(cmd.Result().Error(), cmd.Name()+`:`))
 			printResult(cmd, l)
 		}(cmd, c.lgr)
 	}
 
 	wg.Wait()
 
-	return nil
+	return c.errors
 }
 
 func (c *Checker) SetLogger(l ILogger) *Checker {

@@ -2,6 +2,10 @@ module github.com/efureev/health-checker
 
 go 1.18
 
+replace (
+	github.com/efureev/go-multierror => ../../packages/go-multierror
+)
+
 require (
 	github.com/efureev/go-multierror v0.0.0-20220428202111-3a28ecba9fb0
 	github.com/go-redis/redis/v8 v8.11.5
