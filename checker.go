@@ -18,12 +18,21 @@ func (c *Checker) AddCmd(cmd ...ICmd) *Checker {
 	return c
 }
 
+func (c Checker) receiveErrors() error {
+	if c.errors.HasErrors() {
+		return c.errors
+	}
+
+	return nil
+}
+
 func (c *Checker) Run() error {
 	for _, cmd := range c.list {
 		cmd.SetLogger(c.lgr).Run()
 		c.addError(cmd.Result().Error())
 	}
-	return nil
+
+	return c.receiveErrors()
 }
 
 func (c *Checker) RunParallel() error {
@@ -48,7 +57,7 @@ func (c *Checker) RunParallel() error {
 
 	wg.Wait()
 
-	return c.errors
+	return c.receiveErrors()
 }
 
 func (c *Checker) SetLogger(l ILogger) *Checker {
