@@ -8,13 +8,13 @@ import (
 	"github.com/efureev/health-checker"
 )
 
-func CheckingHDDFn(path string) checker.CmdFn {
+func CheckingHDDFn(path string, size uint64) checker.CmdFn {
 	return func(result *checker.Result, log checker.ILogger) {
 		disk := DiskUsage(path)
 
 		result.Info.Text = disk.String()
 
-		if !disk.HasFree(GB) {
+		if !disk.HasFree(size) {
 			result.AddError(errors.New(`lack of disk space`))
 			return
 		}
